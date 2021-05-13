@@ -80,6 +80,7 @@ await context.close()
 - [browser_context.storage_state(**kwargs)](./api/class-browsercontext.mdx#browser_contextstorage_statekwargs)
 - [browser_context.unroute(url, **kwargs)](./api/class-browsercontext.mdx#browser_contextunrouteurl-kwargs)
 - [browser_context.wait_for_event(event, **kwargs)](./api/class-browsercontext.mdx#browser_contextwait_for_eventevent-kwargs)
+- [browser_context.tracing](./api/class-browsercontext.mdx#browser_contexttracing)
 
 ## browser_context.on("backgroundpage")
 - type: <[Page]>
@@ -891,6 +892,9 @@ In most cases, you should use [browser_context.expect_event(event, **kwargs)](./
 
 Waits for given `event` to fire. If predicate is provided, it passes event's value into the `predicate` function and waits for `predicate(event)` to return a truthy value. Will throw an error if the socket is closed before the `event` is fired.
 
+## browser_context.tracing
+- type: <[Tracing]>
+
 [Accessibility]: ./api/class-accessibility.mdx "Accessibility"
 [Browser]: ./api/class-browser.mdx "Browser"
 [BrowserContext]: ./api/class-browsercontext.mdx "BrowserContext"
@@ -914,6 +918,7 @@ Waits for given `event` to fire. If predicate is provided, it passes event's val
 [Selectors]: ./api/class-selectors.mdx "Selectors"
 [TimeoutError]: ./api/class-timeouterror.mdx "TimeoutError"
 [Touchscreen]: ./api/class-touchscreen.mdx "Touchscreen"
+[Tracing]: ./api/class-tracing.mdx "Tracing"
 [Video]: ./api/class-video.mdx "Video"
 [WebSocket]: ./api/class-websocket.mdx "WebSocket"
 [Worker]: ./api/class-worker.mdx "Worker"

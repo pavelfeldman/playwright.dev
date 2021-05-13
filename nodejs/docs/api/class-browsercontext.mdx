@@ -53,6 +53,7 @@ await context.close();
 - [browserContext.storageState([options])](./api/class-browsercontext.mdx#browsercontextstoragestateoptions)
 - [browserContext.unroute(url[, handler])](./api/class-browsercontext.mdx#browsercontextunrouteurl-handler)
 - [browserContext.waitForEvent(event[, optionsOrPredicate])](./api/class-browsercontext.mdx#browsercontextwaitforeventevent-optionsorpredicate)
+- [browserContext.tracing](./api/class-browsercontext.mdx#browsercontexttracing)
 
 ## browserContext.on('backgroundpage')
 - type: <[Page]>
@@ -501,6 +502,8 @@ const [page, _] = await Promise.all([
 ]);
 ```
 
+## browserContext.tracing
+- type: <[Tracing]>
 
 [Accessibility]: ./api/class-accessibility.mdx "Accessibility"
 [Android]: ./api/class-android.mdx "Android"
@@ -534,6 +537,7 @@ const [page, _] = await Promise.all([
 [Selectors]: ./api/class-selectors.mdx "Selectors"
 [TimeoutError]: ./api/class-timeouterror.mdx "TimeoutError"
 [Touchscreen]: ./api/class-touchscreen.mdx "Touchscreen"
+[Tracing]: ./api/class-tracing.mdx "Tracing"
 [Video]: ./api/class-video.mdx "Video"
 [WebSocket]: ./api/class-websocket.mdx "WebSocket"
 [Worker]: ./api/class-worker.mdx "Worker"

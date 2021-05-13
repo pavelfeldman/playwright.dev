@@ -1,37 +1,62 @@
 ---
-id: class-consolemessage
-title: "ConsoleMessage"
+id: class-tracing
+title: "Tracing"
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-[ConsoleMessage] objects are dispatched by page via the [Page.onConsoleMessage(handler)](./api/class-page.mdx#pageonconsolemessagehandler) event.
+API for collecting and saving Playwright traces. Playwright traces can be opened using the [CLI]('./cli.mdx') after Playwright script runs.
+
+Start with specifying the folder traces will be stored in:
+
+```java
+Browser browser = chromium.launch(new BrowserType.LaunchOptions().setTraceDir("trace"));
+BrowserContext context = browser.newContext();
+context.tracing.start(page, new Tracing.StartOptions()
+  .setName("trace")
+  .setScreenshots(true)
+  .setSnapshots(true);
+Page page = context.newPage();
+page.goto("https://playwright.dev");
+context.tracing.stop();
+context.tracing.export(Paths.get("trace.zip")))
+```
 
 
-- [ConsoleMessage.args()](./api/class-consolemessage.mdx#consolemessageargs)
-- [ConsoleMessage.location()](./api/class-consolemessage.mdx#consolemessagelocation)
-- [ConsoleMessage.text()](./api/class-consolemessage.mdx#consolemessagetext)
-- [ConsoleMessage.type()](./api/class-consolemessage.mdx#consolemessagetype)
+- [Tracing.export(path)](./api/class-tracing.mdx#tracingexportpath)
+- [Tracing.start([options])](./api/class-tracing.mdx#tracingstartoptions)
+- [Tracing.stop()](./api/class-tracing.mdx#tracingstop)
 
-## ConsoleMessage.args()
-- returns: <[List]<[JSHandle]>>
+## Tracing.export(path)
+- `path` <[Path]> File to save the trace into.
+- returns: <[void]>
 
-List of arguments passed to a `console` function call. See also [Page.onConsoleMessage(handler)](./api/class-page.mdx#pageonconsolemessagehandler).
+Export trace into the file with the given name. Should be called after the tracing has stopped.
 
-## ConsoleMessage.location()
-- returns: <[String]>
+## Tracing.start([options])
+- `options` <`Tracing.StartOptions`>
+  - `setName` <[String]> If specified, the trace is going to be saved into the file with the given name inside the `traceDir` folder specified in [BrowserType.launch([options])](./api/class-browsertype.mdx#browsertypelaunchoptions).
+  - `setScreenshots` <[boolean]> Whether to capture screenshots during tracing. Screenshots are used to build a timeline preview.
+  - `setSnapshots` <[boolean]> Whether to capture DOM snapshot on every action.
+- returns: <[void]>
 
-URL of the resource followed by 0-based line and column numbers in the resource formatted as `URL:line:column`.
+Start tracing.
 
-## ConsoleMessage.text()
-- returns: <[String]>
+```java
+context.tracing.start(page, new Tracing.StartOptions()
+  .setName("trace")
+  .setScreenshots(true)
+  .setSnapshots(true);
+Page page = context.newPage();
+page.goto('https://playwright.dev');
+context.tracing.stop();
+context.tracing.export(Paths.get("trace.zip")))
+```
 
-The text of the console message.
+## Tracing.stop()
+- returns: <[void]>
 
-## ConsoleMessage.type()
-- returns: <[String]>
-
-One of the following values: `'log'`, `'debug'`, `'info'`, `'error'`, `'warning'`, `'dir'`, `'dirxml'`, `'table'`, `'trace'`, `'clear'`, `'startGroup'`, `'startGroupCollapsed'`, `'endGroup'`, `'assert'`, `'profile'`, `'profileEnd'`, `'count'`, `'timeEnd'`.
+Stop tracing.
 
 [Browser]: ./api/class-browser.mdx "Browser"
 [BrowserContext]: ./api/class-browsercontext.mdx "BrowserContext"

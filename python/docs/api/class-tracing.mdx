@@ -1,51 +1,101 @@
 ---
-id: languages
-title: "Supported languages"
+id: class-tracing
+title: "Tracing"
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The Playwright API is available in multiple languages.
+API for collecting and saving Playwright traces. Playwright traces can be opened using the [CLI]('./cli.mdx') after Playwright script runs.
 
-- [JavaScript and TypeScript](#javascript-and-typescript)
-- [Python](#python)
-- [Java](#java)
-- [C#](#c)
+Start with specifying the folder traces will be stored in:
 
-## JavaScript and TypeScript
+<Tabs
+  groupId="python-flavor"
+  defaultValue="sync"
+  values={[
+    {label: 'Sync', value: 'sync'},
+    {label: 'Async', value: 'async'}
+  ]
+}>
+<TabItem value="sync">
 
-[Playwright for Node.js](https://playwright.dev/docs/intro/) is available.
-* [NPM](https://www.npmjs.com/package/playwright)
-* [Documentation](https://playwright.dev/docs/intro/)
-* [API](https://playwright.dev/docs/api/class-playwright)
-* [GitHub repo](https://github.com/microsoft/playwright)
-
-## Python
-
-[Playwright for Python](https://playwright.dev/python/docs/intro/) is available.
-* [Documentation](https://playwright.dev/python/docs/intro/)
-* [API](https://playwright.dev/python/docs/api/class-playwright)
-* [Playwright on PyPI](https://pypi.org/project/playwright/)
-* [GitHub repo](https://github.com/microsoft/playwright-python)
-* [Pytest integration](https://github.com/microsoft/playwright-pytest)
-
-## Java
-
-[Playwright for Java](https://playwright.dev/java/docs/intro/) is available.
-* [Documentation](https://playwright.dev/java/docs/intro/)
-* [API](https://playwright.dev/java/docs/api/class-playwright)
-* [GitHub repo](https://github.com/microsoft/playwright-java)
-
-## C#
-
-Playwright for C# is available in preview.
-
-```
-dotnet add package PlaywrightSharp
+```py
+browser = chromium.launch(traceDir='traces')
+context = browser.new_context()
+context.tracing.start(name="trace", screenshots=True, snapshots=True)
+page.goto("https://playwright.dev")
+context.tracing.stop()
+context.tracing.export("trace.zip")
 ```
 
-* [Playwright on NuGet](https://www.nuget.org/packages/PlaywrightSharp/)
-* [GitHub repo](https://github.com/microsoft/playwright-sharp)
+</TabItem>
+<TabItem value="async">
+
+```py
+browser = await chromium.launch(traceDir='traces')
+context = await browser.new_context()
+await context.tracing.start(name="trace", screenshots=True, snapshots=True)
+await page.goto("https://playwright.dev")
+await context.tracing.stop()
+await context.tracing.export("trace.zip")
+```
+
+</TabItem>
+</Tabs>
+
+
+- [tracing.export(path)](./api/class-tracing.mdx#tracingexportpath)
+- [tracing.start(**kwargs)](./api/class-tracing.mdx#tracingstartkwargs)
+- [tracing.stop()](./api/class-tracing.mdx#tracingstop)
+
+## tracing.export(path)
+- `path` <[Union]\[[str], [pathlib.Path]\]> File to save the trace into.
+- returns: <[NoneType]>
+
+Export trace into the file with the given name. Should be called after the tracing has stopped.
+
+## tracing.start(**kwargs)
+- `name` <[str]> If specified, the trace is going to be saved into the file with the given name inside the `trace_dir` folder specified in [browser_type.launch(**kwargs)](./api/class-browsertype.mdx#browser_typelaunchkwargs).
+- `screenshots` <[bool]> Whether to capture screenshots during tracing. Screenshots are used to build a timeline preview.
+- `snapshots` <[bool]> Whether to capture DOM snapshot on every action.
+- returns: <[NoneType]>
+
+Start tracing.
+
+<Tabs
+  groupId="python-flavor"
+  defaultValue="sync"
+  values={[
+    {label: 'Sync', value: 'sync'},
+    {label: 'Async', value: 'async'}
+  ]
+}>
+<TabItem value="sync">
+
+```py
+context.tracing.start(name="trace", screenshots=True, snapshots=True)
+page.goto("https://playwright.dev")
+context.tracing.stop()
+context.tracing.export("trace.zip")
+```
+
+</TabItem>
+<TabItem value="async">
+
+```py
+await context.tracing.start(name="trace", screenshots=True, snapshots=True)
+await page.goto("https://playwright.dev")
+await context.tracing.stop()
+await context.tracing.export("trace.zip")
+```
+
+</TabItem>
+</Tabs>
+
+## tracing.stop()
+- returns: <[NoneType]>
+
+Stop tracing.
 
 [Accessibility]: ./api/class-accessibility.mdx "Accessibility"
 [Browser]: ./api/class-browser.mdx "Browser"

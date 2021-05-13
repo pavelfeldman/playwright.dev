@@ -45,6 +45,7 @@ context.close();
 - [BrowserContext.storageState([options])](./api/class-browsercontext.mdx#browsercontextstoragestateoptions)
 - [BrowserContext.unroute(url[, handler])](./api/class-browsercontext.mdx#browsercontextunrouteurl-handler)
 - [BrowserContext.waitForPage([options], callback)](./api/class-browsercontext.mdx#browsercontextwaitforpageoptions-callback)
+- [BrowserContext.tracing()](./api/class-browsercontext.mdx#browsercontexttracing)
 
 ## BrowserContext.onClose(handler)
 - type: <[BrowserContext]>
@@ -428,6 +429,9 @@ Removes a route created with [BrowserContext.route(url, handler)](./api/class-br
 
 Performs action and waits for a new [Page] to be created in the context. If predicate is provided, it passes [Page] value into the `predicate` function and waits for `predicate(event)` to return a truthy value. Will throw an error if the context closes before new [Page] is created.
 
+## BrowserContext.tracing()
+- returns: <[Tracing]>
+
 [Browser]: ./api/class-browser.mdx "Browser"
 [BrowserContext]: ./api/class-browsercontext.mdx "BrowserContext"
 [BrowserType]: ./api/class-browsertype.mdx "BrowserType"
@@ -449,6 +453,7 @@ Performs action and waits for a new [Page] to be created in the context. If pred
 [Selectors]: ./api/class-selectors.mdx "Selectors"
 [TimeoutError]: ./api/class-timeouterror.mdx "TimeoutError"
 [Touchscreen]: ./api/class-touchscreen.mdx "Touchscreen"
+[Tracing]: ./api/class-tracing.mdx "Tracing"
 [Video]: ./api/class-video.mdx "Video"
 [WebSocket]: ./api/class-websocket.mdx "WebSocket"
 [WebSocketFrame]: ./api/class-websocketframe.mdx "WebSocketFrame"

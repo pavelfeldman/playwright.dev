@@ -1,61 +1,56 @@
 ---
-id: class-selectors
-title: "Selectors"
+id: class-tracing
+title: "Tracing"
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Selectors can be used to install custom selector engines. See [Working with selectors](./selectors.mdx) for more information.
+API for collecting and saving Playwright traces. Playwright traces can be opened using the [CLI]('./cli.mdx') after Playwright script runs.
 
-
-- [selectors.register(name, script[, options])](./api/class-selectors.mdx#selectorsregistername-script-options)
-
-## selectors.register(name, script[, options])
-- `name` <[string]> Name that is used in selectors as a prefix, e.g. `{name: 'foo'}` enables `foo=myselectorbody` selectors. May only contain `[a-zA-Z0-9_]` characters.
-- `script` <[function]|[string]|[Object]> Script that evaluates to a selector engine instance.
-  - `path` <[string]> Path to the JavaScript file. If `path` is a relative path, then it is resolved relative to the current working directory. Optional.
-  - `content` <[string]> Raw script content. Optional.
-- `options` <[Object]>
-  - `contentScript` <[boolean]> Whether to run this selector engine in isolated JavaScript environment. This environment has access to the same DOM, but not any JavaScript objects from the frame's scripts. Defaults to `false`. Note that running as a content script is not guaranteed when this engine is used together with other registered engines.
-- returns: <[Promise]<[void]>>
-
-An example of registering selector engine that queries elements based on a tag name:
+Start with specifying the folder traces will be stored in:
 
 ```js
-const { selectors, firefox } = require('playwright');  // Or 'chromium' or 'webkit'.
-
-(async () => {
-  // Must be a function that evaluates to a selector engine instance.
-  const createTagNameEngine = () => ({
-    // Returns the first element matching given selector in the root's subtree.
-    query(root, selector) {
-      return root.querySelector(selector);
-    },
-
-    // Returns all elements matching given selector in the root's subtree.
-    queryAll(root, selector) {
-      return Array.from(root.querySelectorAll(selector));
-    }
-  });
-
-  // Register the engine. Selectors will be prefixed with "tag=".
-  await selectors.register('tag', createTagNameEngine);
-
-  const browser = await firefox.launch();
-  const page = await browser.newPage();
-  await page.setContent(`<div><button>Click me</button></div>`);
-
-  // Use the selector prefixed with its name.
-  const button = await page.$('tag=button');
-  // Combine it with other selector engines.
-  await page.click('tag=div >> text="Click me"');
-  // Can use it in any methods supporting selectors.
-  const buttonCount = await page.$$eval('tag=button', buttons => buttons.length);
-
-  await browser.close();
-})();
+const browser = await chromium.launch({ traceDir: 'traces' });
+const context = await browser.newContext();
+await context.tracing.start({ name: 'trace', screenshots: true, snapshots: true });
+const page = await context.newPage();
+await page.goto('https://playwright.dev');
+await context.tracing.stop();
+await context.tracing.export('trace.zip');
 ```
 
+
+- [tracing.export(path)](./api/class-tracing.mdx#tracingexportpath)
+- [tracing.start([options])](./api/class-tracing.mdx#tracingstartoptions)
+- [tracing.stop()](./api/class-tracing.mdx#tracingstop)
+
+## tracing.export(path)
+- `path` <[string]> File to save the trace into.
+- returns: <[Promise]<[void]>>
+
+Export trace into the file with the given name. Should be called after the tracing has stopped.
+
+## tracing.start([options])
+- `options` <[Object]>
+  - `name` <[string]> If specified, the trace is going to be saved into the file with the given name inside the `traceDir` folder specified in [browserType.launch([options])](./api/class-browsertype.mdx#browsertypelaunchoptions).
+  - `screenshots` <[boolean]> Whether to capture screenshots during tracing. Screenshots are used to build a timeline preview.
+  - `snapshots` <[boolean]> Whether to capture DOM snapshot on every action.
+- returns: <[Promise]<[void]>>
+
+Start tracing.
+
+```js
+await context.tracing.start({ name: 'trace', screenshots: true, snapshots: true });
+const page = await context.newPage();
+await page.goto('https://playwright.dev');
+await context.tracing.stop();
+await context.tracing.export('trace.zip');
+```
+
+## tracing.stop()
+- returns: <[Promise]<[void]>>
+
+Stop tracing.
 
 [Accessibility]: ./api/class-accessibility.mdx "Accessibility"
 [Android]: ./api/class-android.mdx "Android"

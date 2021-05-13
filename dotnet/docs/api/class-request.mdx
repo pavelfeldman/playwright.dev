@@ -41,6 +41,13 @@ The method returns `null` unless this request has failed, as reported by `reques
 
 Example of logging of all the failed requests:
 
+```csharp
+page.RequestFailed += (_, request) =>
+{
+    Console.WriteLine(request.Failure);
+};
+```
+
 ## Request.Frame
 - returns: <[Frame]>
 
@@ -86,7 +93,17 @@ When the server responds with a redirect, Playwright creates a new [Request] obj
 
 For example, if the website `http://example.com` redirects to `https://example.com`:
 
+```csharp
+var response = await page.GoToAsync("http://www.microsoft.com");
+Console.WriteLine(response.Request.RedirectedFrom?.Url); // http://www.microsoft.com
+```
+
 If the website `https://google.com` has no redirects:
+
+```csharp
+var response = await page.GoToAsync("https://www.google.com");
+Console.WriteLine(response.Request.RedirectedFrom?.Url); // null
+```
 
 ## Request.RedirectedTo
 - returns: <[null]|[Request]>
@@ -94,6 +111,10 @@ If the website `https://google.com` has no redirects:
 New request issued by the browser if the server responded with redirect.
 
 This method is the opposite of [Request.RedirectedFrom](./api/class-request.mdx#requestredirectedfrom):
+
+```csharp
+Console.WriteLine(request.RedirectedFrom?.RedirectedTo == request); // True
+```
 
 ## Request.ResourceType
 - returns: <[string]>
@@ -118,6 +139,12 @@ Returns the matching [Response] object, or `null` if the response was not receiv
   - `responseEnd` <[double]> Time immediately after the browser receives the last byte of the resource or immediately before the transport connection is closed, whichever comes first. The value is given in milliseconds relative to `startTime`, -1 if not available.
 
 Returns resource timing information for given request. Most of the timing values become available upon the response, `responseEnd` becomes available when request finishes. Find more information at [Resource Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming).
+
+```csharp
+var requestFinishedTask = page.WaitForEventAsync(PageEvent.RequestFinished);
+await Task.WhenAll(requestFinishedTask, page.GoToAsync("https://www.microsoft.com"));
+Console.WriteLine(requestFinishedTask.Result.Timing.ResponseEnd);
+```
 
 ## Request.Url
 - returns: <[string]>
@@ -145,6 +172,7 @@ URL of the request.
 [Selectors]: ./api/class-selectors.mdx "Selectors"
 [TimeoutError]: ./api/class-timeouterror.mdx "TimeoutError"
 [Touchscreen]: ./api/class-touchscreen.mdx "Touchscreen"
+[Tracing]: ./api/class-tracing.mdx "Tracing"
 [Video]: ./api/class-video.mdx "Video"
 [WebSocket]: ./api/class-websocket.mdx "WebSocket"
 [WebSocketFrame]: ./api/class-websocketframe.mdx "WebSocketFrame"
